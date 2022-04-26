@@ -190,24 +190,25 @@ static void dispatch_method(lop_server s, const char *path,
     lop_arg **argv = msg->argv;
     lop_method it;
     int ret = 1;
-    int pattern = strpbrk(path, " #*,?[]{}") != NULL;
+    int pattern = lop_string_contains_pattern(path);
     const char *pptr;
     
     for (it = s->first; it; it = it->next) {
 	/* If paths match or handler is wildcard */
-	if (!it->path || !strcmp(path, it->path) ||
-	    (pattern && lop_pattern_match(it->path, path))) {
-	    /* If types match or handler is wildcard */
-	    if (!it->typespec || !strcmp(types, it->typespec)) {
+    if (!it->path || !strcmp(path, it->path) ||
+        (pattern && lop_pattern_match(it->path, path)) ||
+        (it->has_pattern && lop_pattern_match(path, it->path))) {
+        /* If types match or handler is wildcard */
+        if (!it->typespec || !strcmp(types, it->typespec)) {
 		/* Send wildcard path to generic handler, expanded path
 		  to others.
 		*/
 		pptr = path;
-		if (it->path) pptr = it->path;
-		ret = it->handler(pptr, types, argv, argc, msg,
-				      it->user_data);
-
-	    } else if (lop_can_coerce_spec(types, it->typespec)) {
+        if (it->path && !it->has_pattern)
+            pptr = it->path;
+        ret = it->handler(pptr, types, argv, argc, msg,
+                          it->user_data);
+        } else if (lop_can_coerce_spec(types, it->typespec)) {
 		int i;
 		int opsize = 0;
 		char *ptr = msg->data;
@@ -245,7 +246,7 @@ static void dispatch_method(lop_server s, const char *path,
 	    if (ret == 0 && !pattern) {
 		break;
 	    }
-	}
+    }
     }
 
     /* If we find no matching methods, check for protocol level stuff */
@@ -380,9 +381,7 @@ lop_method lop_server_add_method(lop_server s, const char *path,
     lop_method m = calloc(1, sizeof(struct _lop_method));
     lop_method it;
 
-    if (path && strpbrk(path, " #*,?[]{}")) {
-	return NULL;
-    }
+    m->has_pattern = lop_string_contains_pattern(path);
 
     if (path) {
 	    m->path = strdup(path);
@@ -418,8 +417,10 @@ void lop_server_del_method(lop_server s, const char *path,
     lop_method it, prev, next;
     int pattern = 0;
 
-    if (!s->first) return;
-    if (path) pattern = strpbrk(path, " #*,?[]{}") != NULL;
+    if (!s->first)
+        return;
+    if (path)
+        pattern = lop_string_contains_pattern(path);
 
     it = s->first;
     prev = it;
