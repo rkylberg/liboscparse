@@ -431,6 +431,13 @@ uint32_t lop_blobsize(lop_blob b);
  */
 int lop_pattern_match(const char *str, const char *p);
 
+/**
+ * \brief Test if a string contains any OSC pattern characters
+ *
+ * \param str The string to test
+ * \return 1 if true, 0 otherwise.
+ */
+int lop_string_contains_pattern(const char *str);
 
 /** \brief Find the time difference between two timetags
  *

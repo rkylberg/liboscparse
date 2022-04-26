@@ -71,6 +71,8 @@
  * Initial revision
  */
 
+#include <string.h>
+
 #ifndef NEGATE
 #define NEGATE  '!'
 #endif
@@ -243,4 +245,11 @@ int lop_pattern_match(const char *str, const char *p)
     }
 
     return !*str;
+}
+
+int lop_string_contains_pattern(const char *str)
+{
+    if (!str)
+        return 0;
+    return strpbrk(str, " #*,?[]{}") != NULL;
 }
