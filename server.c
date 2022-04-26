@@ -275,21 +275,21 @@ static void dispatch_method(lop_server s, const char *path,
 		    if (sec) *sec = '\0';
 		    slend = sl;
 		    for (slit = sl; slit; slend = slit, slit = slit->next) {
-			if (!strcmp(slit->str, tmp)) {
-			    free(tmp);
-			    tmp = NULL;
-			    break;
-			}
+                if (!strcmp(slit->str, tmp)) {
+                    free(tmp);
+                    tmp = NULL;
+                    break;
+                }
 		    }
 		    if (tmp) {
-			slnew = calloc(1, sizeof(lop_strlist));
-			slnew->str = tmp;
-			slnew->next = NULL;
-			if (!slend) {
-			    sl = slnew;
-			} else {
-			    slend->next = slnew;
-			}
+                slnew = calloc(1, sizeof(lop_strlist));
+                slnew->str = tmp;
+                slnew->next = NULL;
+                if (!slend) {
+                    sl = slnew;
+                } else {
+                    slend->next = slnew;
+                }
 		    }
 		}
 	    }
@@ -385,15 +385,15 @@ lop_method lop_server_add_method(lop_server s, const char *path,
     }
 
     if (path) {
-	m->path = strdup(path);
+	    m->path = strdup(path);
     } else {
-	m->path = NULL;
+	    m->path = NULL;
     }
 
     if (typespec) {
-	m->typespec = strdup(typespec);
+	    m->typespec = strdup(typespec);
     } else {
-	m->typespec = NULL;
+	    m->typespec = NULL;
     }
 
     m->handler = h;
@@ -402,11 +402,11 @@ lop_method lop_server_add_method(lop_server s, const char *path,
 
     /* append the new method to the list */
     if (!s->first) {
-	s->first = m;
+	    s->first = m;
     } else {
-	/* get to the last member of the list */
-	for (it=s->first; it->next; it=it->next);
-	it->next = m;
+        /* get to the last member of the list */
+        for (it=s->first; it->next; it=it->next);
+        it->next = m;
     }
 
     return m;
@@ -433,19 +433,20 @@ void lop_server_del_method(lop_server s, const char *path,
 	    (pattern && it->path && lop_pattern_match(it->path, path))) {
 	    /* If types match or handler is wildcard */
 	    if ((it->typespec == typespec) ||
-		(typespec && it->typespec && !strcmp(typespec, it->typespec))
+		    (typespec && it->typespec 
+             && !strcmp(typespec, it->typespec))
 	        ) {
-		/* Take care when removing the head. */
-		if (it == s->first) {
-		    s->first = it->next;
-		} else {
-		    prev->next = it->next;
-		}
-		next = it->next;
-		free((void *)it->path);
-		free((void *)it->typespec);
-		free(it);
-		it = prev;
+            /* Take care when removing the head. */
+            if (it == s->first) {
+                s->first = it->next;
+            } else {
+                prev->next = it->next;
+            }
+            next = it->next;
+            free((void *)it->path);
+            free((void *)it->typespec);
+            free(it);
+            it = prev;
 	    }
 	}
 	prev = it;
