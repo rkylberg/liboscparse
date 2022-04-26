@@ -17,7 +17,7 @@
 #ifndef LOP_ENDIAN_H
 #define LOP_ENDIAN_H
 
-#include <rtems/endian.h>
+// #include <rtems/endian.h>
 #include <sys/types.h>
 #include <stdint.h>
 
