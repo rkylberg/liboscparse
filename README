@@ -1,5 +1,12 @@
 Liblo (OSC library) without GNU/Autocrap and network dependent non-portable code
 
-Based on liblo 0.26
-Builds by default for lm32-rtems4.11
+Based on liblo 0.31
+Build for lm32-rtems4.11 has been DISABLED
 
+CMake Build Instructions
+------------------------
+
+    mkdir build
+    cd build
+    cmake ../cmake/
+    make
