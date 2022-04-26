@@ -34,7 +34,8 @@ typedef int (*lop_method_handler)(const char *path, const char *types,
 typedef struct _lop_method {
 	const char        *path;
 	const char        *typespec;
-	lop_method_handler  handler;
+	int                has_pattern;
+	lop_method_handler handler;
 	char              *user_data;
 	struct _lop_method *next;
 } *lop_method;
