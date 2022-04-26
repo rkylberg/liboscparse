@@ -255,7 +255,7 @@ static void dispatch_method(lop_server s, const char *path,
 	/* if its a method enumeration call */
 	if (pos && *(pos+1) == '\0') {
 	    lop_message reply = lop_message_new();
-	    int len = strlen(path);
+	    int len = (int)strlen(path);
 	    lop_strlist *sl = NULL, *slit, *slnew, *slend;
 
 	    if (!strcmp(types, "i")) {
