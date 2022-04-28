@@ -16,6 +16,9 @@ set(PROJECT liblop)
 set(PACKAGE_NAME "${PROJECT}")
 project(${PROJECT} LANGUAGES C)
 
+# create compile cmds db useful for creating SourceTrail project:
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(NOT CMAKE_VERSION VERSION_LESS 3.1.0)
     set_property(TARGET ${LIBRARY} PROPERTY C_STANDARD 11)
 endif()
